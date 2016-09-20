@@ -17,6 +17,7 @@
 <body>
 	<div id='map'></div>
 	<script>
+	// add map
 	mapboxgl.accessToken = 'pk.eyJ1IjoibGh5MDIxIiwiYSI6IlJxc2ZxMGcifQ.8f1io4N7S_qsJmbbpXJa7A';
 	var map = new mapboxgl.Map({
     container: 'map',
@@ -26,6 +27,20 @@
     minZoom: 11,
     maxZoom: 13, 
 	});
+
+	// add control
+	var nav = new mapboxgl.Navigation ({position: 'top-left'});
+	var geolocate = new mapboxgl.Geolocate({position:'top-right'});
+	var scale = new mapboxgl.Scale({
+		position: 'bottom-right',
+		maxWidth: 80,
+		unit: 'imperial'
+		});
+	map.addControl(nav);
+	map.addControl(geolocate);
+	map.addControl(scale);
+
+
 	</script>
 
 </body>
