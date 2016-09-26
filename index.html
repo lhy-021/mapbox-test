@@ -24,29 +24,64 @@ var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v9',
     center: [-80.843124, 35.227085],
-    zoom: 10
+    zoom: 11
 });
 
 
+// add controls
+map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
+map.addControl(new mapboxgl.Geolocate({position: 'top-right'}));
+
+map.addControl(new mapboxgl.Scale({
+    position: 'bottom-right',
+    maxWidth: 100,
+    unit: 'imperial'
+}));
+
 // add layer
-map.on('style.load', function() {
-    map.addSource("test", {
+map.on('load', function() {
+    map.addSource("Traffic_Signals", {
        "type": "geojson",
        "data": "https://raw.githubusercontent.com/lhy-021/mapbox-test/master/Traffic_Signals.geojson"
    });
 
 
     map.addLayer({
-     "id": "testlayer", // An id for this layer
+     "id": "Traffic_Signals", // An id for this layer
      "type": "circle", // As a point layer, we need style a symbol for each point.
-     "source": "test", // The source layer we defined above
+     "source": "Traffic_Signals", // The source layer we defined above
      "paint": {
-         "circle-radius": 3,
+         "circle-radius": 4,
          "circle-color": "#ff0000",
          "circle-opacity": 0.5
      }
     });
+
 });
+
+var popup = new mapboxgl.Popup({
+    closeButton:false})
+
+
+map.on('mousemove', function (e) {
+    var features = map.queryRenderedFeatures(e.point, { layers: ['Traffic_Signals'] });
+    map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
+
+    if (!features.length) {
+        popup.remove();
+        return;
+    }
+
+    var feature = features[0];
+
+    // Populate the popup and set its coordinates
+    // based on the feature found.
+
+    popup.setLngLat(feature.geometry.coordinates)
+        .setHTML(feature.properties.SIGNAL_ID+" - "+feature.properties.UNITDESC)
+        .addTo(map);
+});
+
 
 </script>
 
