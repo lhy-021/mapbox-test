@@ -22,7 +22,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibGh5MDIxIiwiYSI6IlJxc2ZxMGcifQ.8f1io4N7S_qsJm
 
 var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v9',
+    style: 'mapbox://styles/mapbox/light-v9',
     center: [-80.843124, 35.227085],
     zoom: 11
 });
@@ -31,7 +31,6 @@ var map = new mapboxgl.Map({
 // add controls
 map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
 map.addControl(new mapboxgl.Geolocate({position: 'top-right'}));
-
 map.addControl(new mapboxgl.Scale({
     position: 'bottom-right',
     maxWidth: 100,
@@ -40,6 +39,7 @@ map.addControl(new mapboxgl.Scale({
 
 // add layer
 map.on('load', function() {
+
     map.addSource("Traffic_Signals", {
        "type": "geojson",
        "data": "https://raw.githubusercontent.com/lhy-021/mapbox-test/master/Traffic_Signals.geojson"
@@ -47,14 +47,14 @@ map.on('load', function() {
 
 
     map.addLayer({
-     "id": "Traffic_Signals", // An id for this layer
-     "type": "circle", // As a point layer, we need style a symbol for each point.
-     "source": "Traffic_Signals", // The source layer we defined above
-     "paint": {
-         "circle-radius": 4,
-         "circle-color": "#ff0000",
-         "circle-opacity": 0.5
-     }
+        "id": "Traffic_Signals", // An id for this layer
+        "type": "circle", // As a point layer, we need style a symbol for each point.
+        "source": "Traffic_Signals", // The source layer we defined above
+        "paint": {
+            "circle-radius": 5,
+            "circle-color": "#ff0000",
+            "circle-opacity": 0.4
+        }
     });
 
 });
@@ -62,7 +62,7 @@ map.on('load', function() {
 var popup = new mapboxgl.Popup({
     closeButton:false})
 
-
+// add mouse hover over
 map.on('mousemove', function (e) {
     var features = map.queryRenderedFeatures(e.point, { layers: ['Traffic_Signals'] });
     map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
@@ -78,10 +78,22 @@ map.on('mousemove', function (e) {
     // based on the feature found.
 
     popup.setLngLat(feature.geometry.coordinates)
-        .setHTML(feature.properties.SIGNAL_ID+" - "+feature.properties.UNITDESC)
+        .setHTML("ID "+feature.properties.SIGNAL_ID+" - "+feature.properties.UNITDESC)
         .addTo(map);
 });
 
+// Center the map on a clicked symbol 
+map.on('click', function (e) {
+    // Use queryRenderedFeatures to get features at a click event's point
+    // Use layer option to avoid getting results from other layers
+    var features = map.queryRenderedFeatures(e.point, { layers: ['Traffic_Signals'] });
+    // if there are features within the given radius of the click event,
+    // fly to the location of the click event
+    if (features.length) {
+        // Get coordinates from the symbol and center the map on those coordinates
+        map.flyTo({center: features[0].geometry.coordinates});
+    }
+});
 
 </script>
 
