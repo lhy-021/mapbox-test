@@ -2,13 +2,14 @@
 <html>
 <head>
     <meta charset='utf-8' />
-    <title>Mapbox Test</title>
+    <title>Traffic lights in Charlotte</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.24.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.24.0/mapbox-gl.css' rel='stylesheet' />
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
+
     </style>
 </head>
 <body>
@@ -59,7 +60,6 @@ map.on('load', function() {
             "circle-opacity": 0.4
         }
     });
-
 });
 
 var popup = new mapboxgl.Popup({
@@ -85,7 +85,7 @@ map.on('mousemove', function (e) {
         .addTo(map);
 });
 
-// Center the map on a clicked symbol 
+// Center the map on a clicked symbol
 map.on('click', function (e) {
     // Use queryRenderedFeatures to get features at a click event's point
     // Use layer option to avoid getting results from other layers
