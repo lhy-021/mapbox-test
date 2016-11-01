@@ -1,2 +1,2 @@
-# mapbox-test
-Going through Mapbox GL JS training course
+# mapbox-traffic-lights
+Traffic Lights Location in Charlotte
